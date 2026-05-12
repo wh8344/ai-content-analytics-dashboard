@@ -19,13 +19,13 @@ Screenshot placeholders:
 ## Key Features
 
 - AI analytics dashboard with KPI cards and visual analytics
-- Content analysis workflow with OpenAI-powered structured results
+- Content analysis workflow with MiniMax-powered structured results
 - Sentiment and risk visualization using charts and badges
 - Reports table with search and filters
 - AI insights page with recommendations, topics, sentiment trends, risk alerts, and improvement opportunities
 - SaaS settings page with profile, AI model, notifications, theme, and billing plan sections
 - Responsive modern UI for desktop and mobile layouts
-- Server-side OpenAI API route that keeps the API key off the client
+- Server-side MiniMax API route that keeps the API key off the client
 
 ## Tech Stack
 
@@ -64,10 +64,12 @@ lib/
 Create a `.env.local` file in the project root:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key_here
+MINIMAX_API_KEY=your_minimax_token_plan_key_here
+MINIMAX_API_BASE_URL=https://api.minimaxi.com/v1
+MINIMAX_MODEL=MiniMax-M2.7
 ```
 
-The API key is used only inside the server API route and is never exposed to the browser.
+The MiniMax Token Plan key is used only inside the server API route and is never exposed to the browser. `MINIMAX_API_BASE_URL` and `MINIMAX_MODEL` are optional defaults for local development.
 
 ## How to Run Locally
 
@@ -95,7 +97,7 @@ Use the AI analysis feature:
 2. Paste content with at least 20 characters.
 3. Choose a content type.
 4. Click `Analyze Content`.
-5. The app calls the server route at `/api/analyze`, which sends the request to OpenAI and returns structured analysis JSON.
+5. The app calls the server route at `/api/analyze`, which sends the request to MiniMax and returns structured analysis JSON.
 
 Build for production:
 
@@ -119,7 +121,7 @@ It is suitable for showcasing frontend engineering skills for AI SaaS products, 
 
 ## Current Scope
 
-This project uses mock data for dashboard metrics, insights, reports, and settings. The `/analyze` workflow includes a real server-side OpenAI API integration for content analysis. It does not include a database, authentication system, payment integration, or persistent report storage.
+This project uses mock data for dashboard metrics, insights, reports, and settings. The `/analyze` workflow includes a real server-side MiniMax API integration for content analysis. It does not include a database, authentication system, payment integration, or persistent report storage.
 
 ## Future Improvements
 
