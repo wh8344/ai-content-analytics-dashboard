@@ -47,3 +47,17 @@ export type RecentAnalysisReport = {
   createdAt: string;
   status: ReportStatus;
 };
+
+export type AnalysisFormState = {
+  content: string;
+  contentType: ContentType;
+};
+
+export type AnalysisResult = {
+  summary: string;
+  sentiment: Sentiment;
+  keywords: string[];
+  aiScore: number;
+  riskLevel: RiskLevel;
+  suggestions: string[];
+};
