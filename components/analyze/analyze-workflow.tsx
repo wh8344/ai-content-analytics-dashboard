@@ -5,52 +5,16 @@ import { AlertTriangle, BrainCircuit, FileSearch, ScanLine } from "lucide-react"
 import type {
   AnalysisFormState,
   AnalysisResult,
-  ContentType,
 } from "@/src/types/analytics";
 import { AnalysisForm } from "@/components/analyze/analysis-form";
 import { AnalysisResultCard } from "@/components/analyze/analysis-result-card";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const initialForm: AnalysisFormState = {
   content: "",
   contentType: "Article",
 };
-
-const keywordMap: Record<ContentType, string[]> = {
-  Article: ["narrative clarity", "authority", "search intent", "structure"],
-  "Social Post": ["engagement", "hook", "audience tone", "shareability"],
-  Comment: ["customer friction", "sentiment signal", "support context", "urgency"],
-  "Marketing Copy": ["conversion", "positioning", "claim strength", "CTA clarity"],
-  "Product Review": ["product quality", "purchase intent", "trust signal", "feature feedback"],
-};
-
-const scoreMap: Record<ContentType, number> = {
-  Article: 86,
-  "Social Post": 81,
-  Comment: 74,
-  "Marketing Copy": 88,
-  "Product Review": 83,
-};
-
-function createMockResult(form: AnalysisFormState): AnalysisResult {
-  const trimmedContent = form.content.trim();
-  const isRisky = /refund|angry|misleading|complaint|broken|legal/i.test(trimmedContent);
-  const isPositive = /love|great|excellent|fast|helpful|clear|improved/i.test(trimmedContent);
-
-  return {
-    summary: `This ${form.contentType.toLowerCase()} shows a clear central message with enough context for AI-assisted evaluation. The content is readable, commercially usable, and includes signals that can be converted into content quality, sentiment, and risk insights.`,
-    sentiment: isRisky ? "Negative" : isPositive ? "Positive" : "Neutral",
-    keywords: keywordMap[form.contentType],
-    aiScore: isRisky ? Math.max(scoreMap[form.contentType] - 18, 52) : scoreMap[form.contentType],
-    riskLevel: isRisky ? "High" : form.contentType === "Marketing Copy" ? "Medium" : "Low",
-    suggestions: [
-      "Clarify the primary audience and make the opening message more specific.",
-      "Add stronger evidence or examples to support the main claim.",
-      "Reduce ambiguous wording so the content feels more trustworthy and measurable.",
-      "End with a sharper next step that matches the user's intent.",
-    ],
-  };
-}
 
 function AnalysisSignalsPanel({ isLoading }: { isLoading: boolean }) {
   const signals = [
@@ -66,7 +30,7 @@ function AnalysisSignalsPanel({ isLoading }: { isLoading: boolean }) {
         <CardTitle>{isLoading ? "Analyzing Content" : "Analysis Signals"}</CardTitle>
         <CardDescription>
           {isLoading
-            ? "Generating a structured mock AI analysis report."
+            ? "Generating a structured AI analysis report."
             : "The workflow evaluates quality, tone, keywords, and risk before returning a result."}
         </CardDescription>
       </CardHeader>
@@ -99,35 +63,93 @@ function AnalysisSignalsPanel({ isLoading }: { isLoading: boolean }) {
   );
 }
 
+function ErrorPanel({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => void;
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Analysis Failed</CardTitle>
+        <CardDescription>
+          The request could not be completed. Check your API key or try again.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-700">{message}</p>
+        </div>
+        <Button className="mt-4" onClick={onRetry} type="button" variant="outline">
+          Retry Analysis
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function AnalyzeWorkflow() {
   const [form, setForm] = useState<AnalysisFormState>(initialForm);
   const [error, setError] = useState("");
+  const [requestError, setRequestError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const contentLength = form.content.trim().length;
 
     if (contentLength === 0) {
       setError("Content cannot be empty.");
+      setRequestError("");
       setResult(null);
       return;
     }
 
     if (contentLength < 20) {
       setError("Content must be at least 20 characters.");
+      setRequestError("");
       setResult(null);
       return;
     }
 
     setError("");
+    setRequestError("");
     setIsLoading(true);
     setResult(null);
 
-    window.setTimeout(() => {
-      setResult(createMockResult(form));
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: form.content,
+          contentType: form.contentType,
+        }),
+      });
+
+      const data = (await response.json()) as {
+        result?: AnalysisResult;
+        error?: string;
+      };
+
+      if (!response.ok || !data.result) {
+        throw new Error(data.error || "AI analysis request failed.");
+      }
+
+      setResult(data.result);
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Unexpected error while analyzing content.";
+      setRequestError(message);
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   }
 
   return (
@@ -140,7 +162,13 @@ export function AnalyzeWorkflow() {
         onSubmit={handleSubmit}
       />
       <div className="space-y-4">
-        {result ? <AnalysisResultCard result={result} /> : <AnalysisSignalsPanel isLoading={isLoading} />}
+        {requestError ? (
+          <ErrorPanel message={requestError} onRetry={handleSubmit} />
+        ) : result ? (
+          <AnalysisResultCard result={result} />
+        ) : (
+          <AnalysisSignalsPanel isLoading={isLoading} />
+        )}
       </div>
     </div>
   );

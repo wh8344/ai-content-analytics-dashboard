@@ -31,7 +31,7 @@ export function AnalysisResultCard({ result }: { result: AnalysisResult }) {
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <CardTitle>AI Analysis Result</CardTitle>
-          <CardDescription>Structured mock insight generated for the selected content.</CardDescription>
+          <CardDescription>Structured insight generated for the selected content.</CardDescription>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge className={sentimentStyles[result.sentiment]}>{result.sentiment}</Badge>

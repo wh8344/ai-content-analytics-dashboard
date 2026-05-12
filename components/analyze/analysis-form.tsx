@@ -31,7 +31,7 @@ export function AnalysisForm({
       <CardHeader>
         <CardTitle>New Content Analysis</CardTitle>
         <CardDescription>
-          Paste content, choose the source type, and generate a mock AI insight report.
+          Paste content, choose the source type, and generate a structured AI insight report.
         </CardDescription>
       </CardHeader>
       <CardContent>
