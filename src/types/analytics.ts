@@ -4,6 +4,8 @@ export type Sentiment = "Positive" | "Neutral" | "Negative";
 
 export type RiskLevel = "Low" | "Medium" | "High";
 
+export type Priority = "Low" | "Medium" | "High";
+
 export type ReportStatus = "Completed" | "In Review" | "Flagged";
 
 export type ContentType =
@@ -60,4 +62,20 @@ export type AnalysisResult = {
   aiScore: number;
   riskLevel: RiskLevel;
   suggestions: string[];
+};
+
+export type InsightCategory =
+  | "AI Recommendations"
+  | "Top Performing Topics"
+  | "Audience Sentiment Trends"
+  | "Content Risk Alerts"
+  | "Content Improvement Opportunities";
+
+export type AiInsight = {
+  id: string;
+  title: string;
+  description: string;
+  category: InsightCategory;
+  priority: Priority;
+  createdAt: string;
 };

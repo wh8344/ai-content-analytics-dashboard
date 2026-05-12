@@ -5,6 +5,7 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import type {
+  AiInsight,
   ContentTypeVolume,
   KpiMetric,
   RecentAnalysisReport,
@@ -122,5 +123,80 @@ export const recentAnalysisReports: RecentAnalysisReport[] = [
     riskLevel: "Low",
     createdAt: "Dec 08, 2026",
     status: "Completed",
+  },
+];
+
+export const aiInsights: AiInsight[] = [
+  {
+    id: "ins_001",
+    title: "Clarify proof points in conversion pages",
+    description:
+      "High-performing copy consistently includes concrete evidence, customer outcomes, and measurable claims above the fold.",
+    category: "AI Recommendations",
+    priority: "High",
+    createdAt: "Dec 12, 2026",
+  },
+  {
+    id: "ins_002",
+    title: "Automation workflow topics are gaining traction",
+    description:
+      "Articles covering reporting automation and review quality generated the strongest average AI score this month.",
+    category: "Top Performing Topics",
+    priority: "Medium",
+    createdAt: "Dec 12, 2026",
+  },
+  {
+    id: "ins_003",
+    title: "Audience sentiment remains positive but more cautious",
+    description:
+      "Positive sentiment is stable, while neutral responses increased around pricing, implementation effort, and data quality.",
+    category: "Audience Sentiment Trends",
+    priority: "Medium",
+    createdAt: "Dec 11, 2026",
+  },
+  {
+    id: "ins_004",
+    title: "Risk language detected in two marketing claims",
+    description:
+      "Several campaign snippets use broad guarantee-style language that should be reviewed before publishing.",
+    category: "Content Risk Alerts",
+    priority: "High",
+    createdAt: "Dec 11, 2026",
+  },
+  {
+    id: "ins_005",
+    title: "Improve introductions for long-form articles",
+    description:
+      "Long-form content scores higher when the opening paragraph states audience, problem, and promised outcome clearly.",
+    category: "Content Improvement Opportunities",
+    priority: "Low",
+    createdAt: "Dec 10, 2026",
+  },
+  {
+    id: "ins_006",
+    title: "Product reviews need stronger feature clustering",
+    description:
+      "Review summaries become more actionable when feature feedback is grouped by reliability, support, pricing, and usability.",
+    category: "AI Recommendations",
+    priority: "Medium",
+    createdAt: "Dec 10, 2026",
+  },
+  {
+    id: "ins_007",
+    title: "Social post hooks outperform generic announcements",
+    description:
+      "Posts that begin with a pain point or benchmark outperform product-first announcements across engagement indicators.",
+    category: "Top Performing Topics",
+    priority: "Medium",
+    createdAt: "Dec 09, 2026",
+  },
+  {
+    id: "ins_008",
+    title: "Negative comments cluster around onboarding friction",
+    description:
+      "Flagged comments mention setup effort and unclear next steps, suggesting a documentation and onboarding opportunity.",
+    category: "Content Risk Alerts",
+    priority: "High",
+    createdAt: "Dec 09, 2026",
   },
 ];

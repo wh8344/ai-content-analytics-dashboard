@@ -1,37 +1,79 @@
-import { BadgeAlert, Hash, Lightbulb } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard-shell";
+import { InsightCard } from "@/components/insights/insight-card";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { aiInsights } from "@/src/data/mock-data";
+import type { InsightCategory } from "@/src/types/analytics";
 
-const insights = [
-  { icon: Lightbulb, title: "Audience intent", text: "Customers mention speed, trust, and pricing most often." },
-  { icon: Hash, title: "Top keywords", text: "AI workflow, reporting, automation, review quality, conversion." },
-  { icon: BadgeAlert, title: "Risk signals", text: "Potential overpromising detected in two marketing snippets." },
+const categories: InsightCategory[] = [
+  "AI Recommendations",
+  "Top Performing Topics",
+  "Audience Sentiment Trends",
+  "Content Risk Alerts",
+  "Content Improvement Opportunities",
 ];
 
 export default function InsightsPage() {
   return (
     <DashboardShell title="Insights">
-      <PageHeader
-        eyebrow="AI summaries"
-        title="Understand what your content is really saying"
-        description="Review generated themes, intent patterns, keyword clusters, and content risks before publishing."
-      />
+      <div className="space-y-5">
+        <PageHeader
+          eyebrow="AI insight center"
+          title="Turn content analysis into editorial decisions"
+          description="Review recommendations, emerging topics, sentiment shifts, risk alerts, and improvement opportunities across your content workspace."
+        />
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {insights.map(({ icon: Icon, title, text }) => (
-          <Card key={title}>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
             <CardHeader>
-              <div className="mb-3 grid h-9 w-9 place-items-center rounded-md bg-blue-50 text-blue-600">
-                <Icon className="h-4 w-4" />
-              </div>
-              <CardTitle>{title}</CardTitle>
+              <CardTitle>High Priority Signals</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm leading-6 text-zinc-500">{text}</p>
+              <p className="text-2xl font-semibold text-zinc-950">
+                {aiInsights.filter((insight) => insight.priority === "High").length}
+              </p>
+              <p className="mt-1 text-sm text-zinc-500">Require editorial review this week</p>
             </CardContent>
           </Card>
-        ))}
+          <Card>
+            <CardHeader>
+              <CardTitle>Insight Categories</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-semibold text-zinc-950">{categories.length}</p>
+              <p className="mt-1 text-sm text-zinc-500">Covered across content intelligence</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Generated Insights</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-semibold text-zinc-950">{aiInsights.length}</p>
+              <p className="mt-1 text-sm text-zinc-500">Based on latest mock analysis reports</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          {categories.map((category) => {
+            const items = aiInsights.filter((insight) => insight.category === category);
+
+            return (
+              <section key={category}>
+                <div className="mb-3 flex items-center justify-between gap-4">
+                  <h3 className="text-sm font-semibold text-zinc-950">{category}</h3>
+                  <span className="text-xs font-medium text-zinc-500">{items.length} insights</span>
+                </div>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {items.map((insight) => (
+                    <InsightCard insight={insight} key={insight.id} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
       </div>
     </DashboardShell>
   );
