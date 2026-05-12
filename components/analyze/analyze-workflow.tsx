@@ -5,15 +5,27 @@ import { AlertTriangle, BrainCircuit, FileSearch, ScanLine } from "lucide-react"
 import type {
   AnalysisFormState,
   AnalysisResult,
+  SavedAnalysisReport,
 } from "@/src/types/analytics";
 import { AnalysisForm } from "@/components/analyze/analysis-form";
 import { AnalysisResultCard } from "@/components/analyze/analysis-result-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  exportAnalysisAsCsv,
+  exportAnalysisAsJson,
+  saveAnalysisReport,
+} from "@/src/lib/analysis-history";
 
 const initialForm: AnalysisFormState = {
   content: "",
   contentType: "Article",
+};
+
+const sampleForm: AnalysisFormState = {
+  contentType: "Product Review",
+  content:
+    "This product review says the onboarding experience is clear, the reporting dashboard is fast, and the weekly analytics summary helps our marketing team prioritize better content decisions.",
 };
 
 function AnalysisSignalsPanel({ isLoading }: { isLoading: boolean }) {
@@ -96,6 +108,7 @@ export function AnalyzeWorkflow() {
   const [requestError, setRequestError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [savedReport, setSavedReport] = useState<SavedAnalysisReport | null>(null);
 
   async function handleSubmit() {
     const contentLength = form.content.trim().length;
@@ -118,6 +131,7 @@ export function AnalyzeWorkflow() {
     setRequestError("");
     setIsLoading(true);
     setResult(null);
+    setSavedReport(null);
 
     try {
       const response = await fetch("/api/analyze", {
@@ -141,6 +155,7 @@ export function AnalyzeWorkflow() {
       }
 
       setResult(data.result);
+      setSavedReport(saveAnalysisReport(form, data.result));
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -152,6 +167,12 @@ export function AnalyzeWorkflow() {
     }
   }
 
+  function handleTrySample() {
+    setForm(sampleForm);
+    setError("");
+    setRequestError("");
+  }
+
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
       <AnalysisForm
@@ -160,12 +181,17 @@ export function AnalyzeWorkflow() {
         isLoading={isLoading}
         onChange={setForm}
         onSubmit={handleSubmit}
+        onTrySample={handleTrySample}
       />
       <div className="space-y-4">
         {requestError ? (
           <ErrorPanel message={requestError} onRetry={handleSubmit} />
         ) : result ? (
-          <AnalysisResultCard result={result} />
+          <AnalysisResultCard
+            onExportCsv={savedReport ? () => exportAnalysisAsCsv(savedReport) : undefined}
+            onExportJson={savedReport ? () => exportAnalysisAsJson(savedReport) : undefined}
+            result={result}
+          />
         ) : (
           <AnalysisSignalsPanel isLoading={isLoading} />
         )}

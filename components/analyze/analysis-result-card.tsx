@@ -3,6 +3,7 @@ import { KeywordTags } from "@/components/analyze/keyword-tags";
 import { ScoreProgress } from "@/components/analyze/score-progress";
 import { SuggestionList } from "@/components/analyze/suggestion-list";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const sentimentStyles: Record<Sentiment, string> = {
@@ -25,7 +26,15 @@ function Badge({ className, children }: { className: string; children: React.Rea
   );
 }
 
-export function AnalysisResultCard({ result }: { result: AnalysisResult }) {
+export function AnalysisResultCard({
+  result,
+  onExportCsv,
+  onExportJson,
+}: {
+  result: AnalysisResult;
+  onExportCsv?: () => void;
+  onExportJson?: () => void;
+}) {
   return (
     <Card>
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -33,9 +42,19 @@ export function AnalysisResultCard({ result }: { result: AnalysisResult }) {
           <CardTitle>AI Analysis Result</CardTitle>
           <CardDescription>Structured insight generated for the selected content.</CardDescription>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <Badge className={sentimentStyles[result.sentiment]}>{result.sentiment}</Badge>
           <Badge className={riskStyles[result.riskLevel]}>{result.riskLevel} Risk</Badge>
+          {onExportJson ? (
+            <Button onClick={onExportJson} size="sm" type="button" variant="outline">
+              JSON
+            </Button>
+          ) : null}
+          {onExportCsv ? (
+            <Button onClick={onExportCsv} size="sm" type="button" variant="outline">
+              CSV
+            </Button>
+          ) : null}
         </div>
       </CardHeader>
       <CardContent className="space-y-5">

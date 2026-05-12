@@ -19,12 +19,14 @@ export function AnalysisForm({
   isLoading,
   onChange,
   onSubmit,
+  onTrySample,
 }: {
   form: AnalysisFormState;
   error: string;
   isLoading: boolean;
   onChange: (form: AnalysisFormState) => void;
   onSubmit: () => void;
+  onTrySample: () => void;
 }) {
   return (
     <Card>
@@ -81,10 +83,21 @@ export function AnalysisForm({
             {error ? <p className="mt-2 text-sm font-medium text-red-600">{error}</p> : null}
           </div>
 
-          <Button className="w-full sm:w-auto" disabled={isLoading} type="submit">
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-            {isLoading ? "Analyzing..." : "Analyze Content"}
-          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button className="w-full sm:w-auto" disabled={isLoading} type="submit">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              {isLoading ? "Analyzing..." : "Analyze Content"}
+            </Button>
+            <Button
+              className="w-full sm:w-auto"
+              disabled={isLoading}
+              onClick={onTrySample}
+              type="button"
+              variant="outline"
+            >
+              Try Sample Content
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

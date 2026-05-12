@@ -64,6 +64,11 @@ export type AnalysisResult = {
   suggestions: string[];
 };
 
+export type SavedAnalysisReport = RecentAnalysisReport & {
+  content: string;
+  result: AnalysisResult;
+};
+
 export type InsightCategory =
   | "AI Recommendations"
   | "Top Performing Topics"

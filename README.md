@@ -20,10 +20,12 @@ Screenshot placeholders:
 
 - AI analytics dashboard with KPI cards and visual analytics
 - Content analysis workflow with MiniMax-powered structured results
+- Saved analysis history using browser localStorage
 - Sentiment and risk visualization using charts and badges
-- Reports table with search and filters
+- Reports table with search, filters, and clickable detail pages
 - AI insights page with recommendations, topics, sentiment trends, risk alerts, and improvement opportunities
 - SaaS settings page with profile, AI model, notifications, theme, and billing plan sections
+- JSON and CSV export options for analysis reports
 - Responsive modern UI for desktop and mobile layouts
 - Server-side MiniMax API route that keeps the API key off the client
 
@@ -55,6 +57,7 @@ components/
   ui/
 src/
   data/
+  lib/
   types/
 lib/
 ```
@@ -98,6 +101,8 @@ Use the AI analysis feature:
 3. Choose a content type.
 4. Click `Analyze Content`.
 5. The app calls the server route at `/api/analyze`, which sends the request to MiniMax and returns structured analysis JSON.
+6. Successful results are saved to browser localStorage and appear in `/reports`.
+7. Click `View` in `/reports` to open a report detail page and export JSON or CSV.
 
 Build for production:
 
@@ -113,6 +118,8 @@ This project demonstrates:
 - Data visualization with Recharts
 - AI SaaS product UI design
 - Component-based architecture
+- Server-side AI provider integration
+- Client-side analysis history and report detail workflows
 - Responsive SaaS application layout
 - Fast MVP delivery ability
 - Clean frontend structure using TypeScript and reusable components
@@ -121,7 +128,7 @@ It is suitable for showcasing frontend engineering skills for AI SaaS products, 
 
 ## Current Scope
 
-This project uses mock data for dashboard metrics, insights, reports, and settings. The `/analyze` workflow includes a real server-side MiniMax API integration for content analysis. It does not include a database, authentication system, payment integration, or persistent report storage.
+This project uses mock data for dashboard metrics, insights, and settings. The `/analyze` workflow includes a real server-side MiniMax API integration for content analysis, and successful reports are stored in browser localStorage. It does not include a database, authentication system, payment integration, or server-side persistent report storage.
 
 ## Future Improvements
 

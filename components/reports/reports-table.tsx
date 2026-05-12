@@ -1,17 +1,18 @@
 "use client";
 
 import { Eye, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import type {
   ContentType,
   RecentAnalysisReport,
   RiskLevel,
   Sentiment,
 } from "@/src/types/analytics";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { getSavedAnalysisReports } from "@/src/lib/analysis-history";
 
 type ContentTypeFilter = ContentType | "All";
 type SentimentFilter = Sentiment | "All";
@@ -80,15 +81,33 @@ function FilterSelect({
 }
 
 export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
+  const [savedReports, setSavedReports] = useState<RecentAnalysisReport[]>([]);
   const [query, setQuery] = useState("");
   const [contentType, setContentType] = useState<ContentTypeFilter>("All");
   const [sentiment, setSentiment] = useState<SentimentFilter>("All");
   const [riskLevel, setRiskLevel] = useState<RiskFilter>("All");
 
+  useEffect(() => {
+    function syncReports() {
+      setSavedReports(getSavedAnalysisReports());
+    }
+
+    syncReports();
+    window.addEventListener("storage", syncReports);
+    window.addEventListener("analysis-history-updated", syncReports);
+
+    return () => {
+      window.removeEventListener("storage", syncReports);
+      window.removeEventListener("analysis-history-updated", syncReports);
+    };
+  }, []);
+
+  const allReports = useMemo(() => [...savedReports, ...reports], [reports, savedReports]);
+
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return reports.filter((report) => {
+    return allReports.filter((report) => {
       const matchesSearch =
         normalizedQuery.length === 0 ||
         report.title.toLowerCase().includes(normalizedQuery) ||
@@ -100,7 +119,7 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
 
       return matchesSearch && matchesContentType && matchesSentiment && matchesRisk;
     });
-  }, [contentType, query, reports, riskLevel, sentiment]);
+  }, [allReports, contentType, query, riskLevel, sentiment]);
 
   return (
     <Card>
@@ -113,7 +132,7 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
             </CardDescription>
           </div>
           <span className="text-xs font-medium text-zinc-500">
-            {filteredReports.length} of {reports.length} reports
+            {filteredReports.length} of {allReports.length} reports
           </span>
         </div>
 
@@ -197,10 +216,13 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
                     </td>
                     <td className="border-b border-zinc-100 py-4 pr-4">{report.status}</td>
                     <td className="border-b border-zinc-100 py-4 text-right">
-                      <Button size="sm" type="button" variant="outline">
+                      <Link
+                        className="inline-flex h-8 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50"
+                        href={`/reports/${report.id}`}
+                      >
                         <Eye className="h-4 w-4" />
                         View
-                      </Button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
