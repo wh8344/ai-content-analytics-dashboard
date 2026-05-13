@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { DynamicInsights } from "@/components/insights/dynamic-insights";
 import { PageHeader } from "@/components/page-header";
+
+export const metadata: Metadata = {
+  title: "Insights",
+  description:
+    "Review dynamic content strategy recommendations, sentiment trends, and quality opportunities from saved analysis history.",
+};
 
 export default function InsightsPage() {
   return (

@@ -29,6 +29,15 @@ export function Topbar({ title }: { title: string }) {
           <Avatar />
         </div>
       </div>
+      <div className="px-4 pb-4 sm:px-6 md:hidden">
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 shadow-sm">
+          <Search className="h-4 w-4 text-zinc-400" />
+          <Input
+            className="border-0 px-0 shadow-none focus:border-0 focus:ring-0"
+            placeholder="Search reports, keywords, content..."
+          />
+        </div>
+      </div>
     </header>
   );
 }

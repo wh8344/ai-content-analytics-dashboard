@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import {
-  AlertTriangle,
   BarChart3,
   FileText,
   Gauge,
@@ -15,7 +13,8 @@ import { KpiCard } from "@/components/dashboard/kpi-card";
 import { RecentReportsTable } from "@/components/dashboard/recent-reports-table";
 import { SentimentChart } from "@/components/dashboard/sentiment-chart";
 import { TrendChart } from "@/components/dashboard/trend-chart";
-import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageSkeleton } from "@/components/ui/page-skeleton";
 import { getAnalysisHistory } from "@/src/lib/analysis-history";
 import type {
   ContentType,
@@ -53,59 +52,18 @@ function parseReportTime(report: SavedAnalysisReport) {
 
 function EmptyDashboard() {
   return (
-    <Card className="border-dashed">
-      <CardContent className="flex min-h-[420px] flex-col items-center justify-center p-8 text-center">
-        <div className="grid h-12 w-12 place-items-center rounded-xl border border-zinc-200 bg-zinc-50">
-          <Sparkles className="h-5 w-5 text-zinc-700" />
-        </div>
-        <h2 className="mt-5 text-xl font-semibold tracking-tight text-zinc-950">
-          No analysis history yet
-        </h2>
-        <p className="mt-2 max-w-md text-sm leading-6 text-zinc-500">
-          Dashboard metrics will appear after you analyze content. Start with a sample or paste real
-          content to generate your first AI report.
-        </p>
-        <Link
-          className="mt-5 inline-flex h-9 items-center justify-center rounded-md bg-zinc-950 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
-          href="/analyze"
-        >
-          Analyze Content
-        </Link>
-      </CardContent>
-    </Card>
+    <EmptyState
+      actionHref="/analyze"
+      actionLabel="Analyze Content"
+      description="Dashboard metrics, charts, and recent reports will appear after you analyze content. Start with one of the built-in samples or paste your own source copy."
+      icon={Sparkles}
+      title="No dashboard activity yet"
+    />
   );
 }
 
 function DashboardSkeleton() {
-  return (
-    <div className="space-y-5">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {["one", "two", "three", "four"].map((item) => (
-          <Card key={item}>
-            <CardContent className="p-5">
-              <div className="h-4 w-32 rounded bg-zinc-100" />
-              <div className="mt-4 h-8 w-20 rounded bg-zinc-100" />
-              <div className="mt-5 h-6 w-36 rounded bg-zinc-100" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]">
-        <Card className="min-h-[360px]">
-          <CardContent className="p-6">
-            <div className="h-5 w-40 rounded bg-zinc-100" />
-            <div className="mt-6 h-64 rounded bg-zinc-50" />
-          </CardContent>
-        </Card>
-        <Card className="min-h-[360px]">
-          <CardContent className="p-6">
-            <div className="h-5 w-32 rounded bg-zinc-100" />
-            <div className="mt-6 h-64 rounded bg-zinc-50" />
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+  return <PageSkeleton />;
 }
 
 export function DynamicDashboard() {
@@ -170,7 +128,7 @@ export function DynamicDashboard() {
         value: String(highRiskCount),
         change: highRiskCount > 0 ? "Review required" : "No high-risk reports",
         trend: highRiskCount > 0 ? "down" : "up",
-        icon: AlertTriangle,
+        icon: FileText,
       },
     ];
 

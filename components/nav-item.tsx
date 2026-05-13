@@ -21,7 +21,7 @@ export function NavItem({
     <Link
       href={href}
       className={cn(
-        "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
+        "flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
         active
           ? "bg-zinc-950 text-white"
           : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950",

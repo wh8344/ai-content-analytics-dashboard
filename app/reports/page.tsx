@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { PageHeader } from "@/components/page-header";
 import { ReportsTable } from "@/components/reports/reports-table";
+
+export const metadata: Metadata = {
+  title: "Reports",
+  description:
+    "Search, filter, review, and manage the archive of AI content analysis reports.",
+};
 
 export default function ReportsPage() {
   return (

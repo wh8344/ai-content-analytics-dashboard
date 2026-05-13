@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { AnalyzeWorkflow } from "@/components/analyze/analyze-workflow";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { PageHeader } from "@/components/page-header";
+
+export const metadata: Metadata = {
+  title: "Analyze",
+  description:
+    "Run AI analysis for articles, reviews, social content, and marketing copy with live provider integration.",
+};
 
 export default function AnalyzePage() {
   return (

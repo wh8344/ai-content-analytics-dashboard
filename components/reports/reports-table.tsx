@@ -12,6 +12,7 @@ import type {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageSkeleton } from "@/components/ui/page-skeleton";
 import { cn } from "@/lib/utils";
 import {
   clearAnalysisHistory,
@@ -86,7 +87,7 @@ function FilterSelect({
 }
 
 export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[] }) {
-  const [savedReports, setSavedReports] = useState<RecentAnalysisReport[]>([]);
+  const [savedReports, setSavedReports] = useState<RecentAnalysisReport[] | null>(null);
   const [query, setQuery] = useState("");
   const [contentType, setContentType] = useState<ContentTypeFilter>("All");
   const [sentiment, setSentiment] = useState<SentimentFilter>("All");
@@ -107,7 +108,7 @@ export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[
     };
   }, []);
 
-  const allReports = useMemo(() => [...savedReports, ...reports], [reports, savedReports]);
+  const allReports = useMemo(() => [...(savedReports ?? []), ...reports], [reports, savedReports]);
 
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -152,8 +153,12 @@ export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[
     setRiskLevel("All");
   }
 
+  if (savedReports === null) {
+    return <PageSkeleton charts={1} metrics={2} />;
+  }
+
   return (
-    <Card>
+    <Card className="animate-fade-up">
       <CardHeader className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -213,24 +218,30 @@ export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[
       </CardHeader>
       <CardContent>
         {filteredReports.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 px-5 py-12 text-center">
-            <p className="text-sm font-semibold text-zinc-950">
-              {allReports.length === 0 ? "No saved analysis reports yet" : "No reports match these filters"}
-            </p>
-            <p className="mt-2 text-sm text-zinc-500">
-              {allReports.length === 0
-                ? "Analyze content to build a report archive for dashboard and insight trends."
-                : "Adjust the search query or filters to view historical analysis reports."}
-            </p>
-            {allReports.length === 0 ? (
+          allReports.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-5 py-12 text-center">
+              <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl border border-zinc-200 bg-white text-[var(--accent)]">
+                <Search className="h-5 w-5" />
+              </div>
+              <p className="mt-4 text-sm font-semibold text-zinc-950">No saved reports yet</p>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">
+                Saved reports will appear here after you run content analyses. This archive powers the dashboard trends and insight recommendations.
+              </p>
               <Link
-                className="mt-4 inline-flex h-9 items-center justify-center rounded-md bg-zinc-950 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+                className="mt-5 inline-flex h-10 items-center justify-center rounded-lg bg-zinc-950 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
                 href="/analyze"
               >
                 Analyze Content
               </Link>
-            ) : null}
-          </div>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-5 py-12 text-center">
+              <p className="text-sm font-semibold text-zinc-950">No reports match these filters</p>
+              <p className="mt-2 text-sm text-zinc-500">
+                Adjust the search query or filters to view historical analysis reports.
+              </p>
+            </div>
+          )
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1020px] border-separate border-spacing-0 text-left text-sm">

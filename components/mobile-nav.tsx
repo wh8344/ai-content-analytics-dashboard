@@ -23,7 +23,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 bg-white/95 px-2 py-2 backdrop-blur lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 bg-white/95 px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur lg:hidden">
       <div className="grid grid-cols-5 gap-1">
         {navigation.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
@@ -32,7 +32,7 @@ export function MobileNav() {
               href={href}
               key={href}
               className={cn(
-                "flex h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] font-medium",
+                "flex h-12 flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-medium transition-colors",
                 active ? "bg-zinc-950 text-white" : "text-zinc-500",
               )}
             >

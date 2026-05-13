@@ -20,7 +20,7 @@ const navigation = [
 
 export function Sidebar() {
   return (
-    <aside className="hidden min-h-screen w-64 shrink-0 border-r border-zinc-200 bg-white px-4 py-5 lg:block">
+    <aside className="sticky top-0 hidden min-h-screen w-64 shrink-0 border-r border-zinc-200/80 bg-white/90 px-4 py-5 backdrop-blur lg:block">
       <div className="mb-8 flex items-center gap-3 px-2">
         <div className="grid h-9 w-9 place-items-center rounded-lg bg-zinc-950 text-white">
           <BarChart3 className="h-4 w-4" />
@@ -37,7 +37,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-8 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+      <div className="mt-8 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
         <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
           Current plan
         </p>

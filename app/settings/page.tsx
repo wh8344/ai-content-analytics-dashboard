@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   Bell,
   BrainCircuit,
@@ -15,6 +16,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Settings",
+  description:
+    "Configure the AI analytics workspace, model defaults, notifications, visual theme, and billing presentation.",
+};
 
 function StaticSwitch({
   checked = true,

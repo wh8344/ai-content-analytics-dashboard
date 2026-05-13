@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
   BarChart3,
   Lightbulb,
   MessageSquareHeart,
@@ -26,6 +24,8 @@ import type {
   Sentiment,
 } from "@/src/types/analytics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageSkeleton } from "@/components/ui/page-skeleton";
 import { cn } from "@/lib/utils";
 import { getAnalysisHistory } from "@/src/lib/analysis-history";
 
@@ -299,33 +299,21 @@ function RecommendationCard({ insight }: { insight: AiInsight }) {
   );
 }
 
-function EmptyState() {
+function InsightsEmptyState() {
   return (
-    <Card>
-      <CardContent className="p-10 text-center">
-        <div className="mx-auto grid h-12 w-12 place-items-center rounded-lg bg-blue-50 text-blue-600">
-          <BarChart3 className="h-5 w-5" />
-        </div>
-        <h3 className="mt-4 text-base font-semibold text-zinc-950">No analysis history yet</h3>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">
-          Insights will appear after you analyze content. Run a sample analysis to unlock
-          sentiment trends, risk alerts, top keywords, and AI recommendations.
-        </p>
-        <Link
-          className="mt-5 inline-flex h-9 items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
-          href="/analyze"
-        >
-          Analyze Content
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </CardContent>
-    </Card>
+    <EmptyState
+      actionHref="/analyze"
+      actionLabel="Analyze Content"
+      description="Insights will appear after you analyze content. Run a sample or real analysis to unlock sentiment trends, risk alerts, top keywords, and rule-based recommendations."
+      icon={BarChart3}
+      title="No insight history yet"
+    />
   );
 }
 
 export function DynamicInsights() {
-  const [reports, setReports] = useState<SavedAnalysisReport[]>([]);
-  const metrics = useMemo(() => calculateMetrics(reports), [reports]);
+  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(null);
+  const metrics = useMemo(() => calculateMetrics(reports ?? []), [reports]);
   const recommendations = useMemo(() => buildRecommendations(metrics), [metrics]);
 
   useEffect(() => {
@@ -343,8 +331,12 @@ export function DynamicInsights() {
     };
   }, []);
 
+  if (reports === null) {
+    return <PageSkeleton charts={3} />;
+  }
+
   if (reports.length === 0) {
-    return <EmptyState />;
+    return <InsightsEmptyState />;
   }
 
   const sentimentData = [
