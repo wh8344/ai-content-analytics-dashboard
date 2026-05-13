@@ -52,8 +52,9 @@ export function isAnalysisResult(value: unknown): value is AnalysisResult {
 }
 
 function extractJsonObject(content: string) {
-  const fencedMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const rawContent = fencedMatch?.[1] ?? content;
+  const withoutThinking = content.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+  const fencedMatch = withoutThinking.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const rawContent = fencedMatch?.[1] ?? withoutThinking;
   const start = rawContent.indexOf("{");
   const end = rawContent.lastIndexOf("}");
 
@@ -111,6 +112,7 @@ export function createMiniMaxProvider(): AiProvider {
             model,
             temperature: 0.2,
             max_tokens: 900,
+            response_format: { type: "json_object" },
             messages: [
               {
                 role: "system",
