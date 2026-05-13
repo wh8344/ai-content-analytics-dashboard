@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createMiniMaxProvider } from "@/src/lib/ai-provider";
+import { createConfiguredAiProvider, getConfiguredProviderName } from "@/src/lib/ai-provider";
 import type { ContentType } from "@/src/types/analytics";
 
 const contentTypes: ContentType[] = [
@@ -44,9 +44,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const provider = createMiniMaxProvider();
+    const providerName = getConfiguredProviderName();
+    const provider = createConfiguredAiProvider();
     const result = await provider.analyzeContent({ content, contentType });
-    return NextResponse.json({ result });
+    return NextResponse.json({ provider: providerName, result });
   } catch (error) {
     console.error("Analyze route error:", error);
     const message =

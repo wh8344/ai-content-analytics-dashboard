@@ -19,7 +19,7 @@ Screenshot placeholders:
 ## Key Features
 
 - AI analytics dashboard with KPI cards and visual analytics
-- Content analysis workflow with MiniMax-powered structured results
+- Content analysis workflow with switchable AI providers
 - Saved analysis history using browser localStorage
 - Sentiment and risk visualization using charts and badges
 - Reports table with search, filters, and clickable detail pages
@@ -27,7 +27,7 @@ Screenshot placeholders:
 - SaaS settings page with profile, AI model, notifications, theme, and billing plan sections
 - JSON and CSV export options for analysis reports
 - Responsive modern UI for desktop and mobile layouts
-- Server-side MiniMax API route that keeps the API key off the client
+- Server-side MiniMax/OpenAI API route that keeps API keys off the client
 
 ## Tech Stack
 
@@ -67,12 +67,25 @@ lib/
 Create a `.env.local` file in the project root:
 
 ```bash
+AI_PROVIDER=minimax
+
 MINIMAX_API_KEY=your_minimax_token_plan_key_here
 MINIMAX_API_BASE_URL=https://api.minimaxi.com/v1
 MINIMAX_MODEL=MiniMax-M2.7
+
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_API_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4o-mini
 ```
 
-The MiniMax Token Plan key is used only inside the server API route and is never exposed to the browser. `MINIMAX_API_BASE_URL` and `MINIMAX_MODEL` are optional defaults for local development.
+Set `AI_PROVIDER` to `minimax` or `openai`. API keys are used only inside the server API route and are never exposed to the browser. Base URL and model variables are optional defaults for local development.
+
+API key locations:
+
+- OpenAI: `https://platform.openai.com/api-keys`
+- MiniMax: `https://platform.minimaxi.com`
+- Anthropic Claude: `https://console.anthropic.com/settings/keys`
+- Google Gemini: `https://aistudio.google.com/app/apikey`
 
 ## How to Run Locally
 
@@ -100,7 +113,7 @@ Use the AI analysis feature:
 2. Paste content with at least 20 characters.
 3. Choose a content type.
 4. Click `Analyze Content`.
-5. The app calls the server route at `/api/analyze`, which sends the request to MiniMax and returns structured analysis JSON.
+5. The app calls the server route at `/api/analyze`, which sends the request to the configured provider and returns structured analysis JSON.
 6. Successful results are saved to browser localStorage and appear in `/reports`.
 7. Click `View` in `/reports` to open a report detail page and export JSON or CSV.
 
@@ -128,7 +141,7 @@ It is suitable for showcasing frontend engineering skills for AI SaaS products, 
 
 ## Current Scope
 
-This project uses mock data for dashboard metrics, insights, and settings. The `/analyze` workflow includes a real server-side MiniMax API integration for content analysis, and successful reports are stored in browser localStorage. It does not include a database, authentication system, payment integration, or server-side persistent report storage.
+This project uses mock data for dashboard metrics, insights, and settings. The `/analyze` workflow includes a real server-side AI provider integration for content analysis, and successful reports are stored in browser localStorage. It does not include a database, authentication system, payment integration, or server-side persistent report storage.
 
 ## Future Improvements
 
