@@ -60,7 +60,7 @@ export function SentimentChart({ data }: { data: SentimentSegment[] }) {
                 />
                 <span className="font-medium text-zinc-700">{item.name}</span>
               </div>
-              <span className="text-zinc-500">{item.value}%</span>
+              <span className="text-zinc-500">{item.value}</span>
             </div>
           ))}
         </div>

@@ -109,10 +109,10 @@ export function ReportDetail({ id }: { id: string }) {
             ["Sentiment", report.sentiment],
             ["Risk Level", report.riskLevel],
           ].map(([label, value]) => (
-            <Card key={label}>
-              <CardContent className="p-5">
+            <Card className="min-h-28" key={label}>
+              <CardContent className="flex min-h-28 flex-col justify-center p-5">
                 <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">{label}</p>
-                <p className="mt-2 text-lg font-semibold text-zinc-950">{value}</p>
+                <p className="mt-2 text-base font-semibold leading-6 text-zinc-950">{value}</p>
               </CardContent>
             </Card>
           ))}
@@ -130,11 +130,21 @@ export function ReportDetail({ id }: { id: string }) {
               <CardDescription>Download this analysis for client review or archive use.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full justify-start" onClick={() => exportAnalysisAsJson(exportableReport)} type="button" variant="outline">
+              <Button
+                className="h-10 w-full justify-start gap-2 text-sm font-semibold"
+                onClick={() => exportAnalysisAsJson(exportableReport)}
+                type="button"
+                variant="outline"
+              >
                 <FileJson className="h-4 w-4" />
                 Export JSON
               </Button>
-              <Button className="w-full justify-start" onClick={() => exportAnalysisAsCsv(exportableReport)} type="button" variant="outline">
+              <Button
+                className="h-10 w-full justify-start gap-2 text-sm font-semibold"
+                onClick={() => exportAnalysisAsCsv(exportableReport)}
+                type="button"
+                variant="outline"
+              >
                 <Download className="h-4 w-4" />
                 Export CSV
               </Button>

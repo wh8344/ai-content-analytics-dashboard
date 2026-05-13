@@ -3,7 +3,6 @@ import { KeywordTags } from "@/components/analyze/keyword-tags";
 import { ScoreProgress } from "@/components/analyze/score-progress";
 import { SuggestionList } from "@/components/analyze/suggestion-list";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const sentimentStyles: Record<Sentiment, string> = {
@@ -20,9 +19,27 @@ const riskStyles: Record<RiskLevel, string> = {
 
 function Badge({ className, children }: { className: string; children: React.ReactNode }) {
   return (
-    <span className={cn("rounded-md px-2.5 py-1 text-xs font-semibold ring-1", className)}>
+    <span className={cn("inline-flex h-8 items-center rounded-md px-2.5 text-xs font-semibold ring-1", className)}>
       {children}
     </span>
+  );
+}
+
+function ExportAction({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className="inline-flex h-8 items-center justify-center rounded-md border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
   );
 }
 
@@ -37,23 +54,19 @@ export function AnalysisResultCard({
 }) {
   return (
     <Card>
-      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+      <CardHeader className="flex flex-col gap-4 border-b border-zinc-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <CardTitle>AI Analysis Result</CardTitle>
           <CardDescription>Structured insight generated for the selected content.</CardDescription>
         </div>
-        <div className="flex flex-wrap justify-end gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
           <Badge className={sentimentStyles[result.sentiment]}>{result.sentiment}</Badge>
           <Badge className={riskStyles[result.riskLevel]}>{result.riskLevel} Risk</Badge>
           {onExportJson ? (
-            <Button onClick={onExportJson} size="sm" type="button" variant="outline">
-              JSON
-            </Button>
+            <ExportAction onClick={onExportJson}>JSON</ExportAction>
           ) : null}
           {onExportCsv ? (
-            <Button onClick={onExportCsv} size="sm" type="button" variant="outline">
-              CSV
-            </Button>
+            <ExportAction onClick={onExportCsv}>CSV</ExportAction>
           ) : null}
         </div>
       </CardHeader>

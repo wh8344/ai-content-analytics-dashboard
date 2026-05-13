@@ -27,36 +27,38 @@ export function ContentTypeChart({ data }: { data: ContentTypeVolume[] }) {
         <CardDescription>Analyzed content grouped by source format.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
-          {mounted ? (
-            <ResponsiveContainer height="100%" width="100%">
-              <BarChart data={data} margin={{ left: -12, right: 4, top: 8 }}>
-                <CartesianGrid stroke="#e4e4e7" strokeDasharray="4 4" vertical={false} />
-                <XAxis
-                  axisLine={false}
-                  dataKey="type"
-                  interval={0}
-                  tick={{ fill: "#71717a", fontSize: 11 }}
-                  tickLine={false}
-                />
-                <YAxis
-                  axisLine={false}
-                  tick={{ fill: "#71717a", fontSize: 12 }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    border: "1px solid #e4e4e7",
-                    borderRadius: 8,
-                    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-                  }}
-                />
-                <Bar dataKey="count" fill="#18181b" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full rounded-md bg-zinc-50" />
-          )}
+        <div className="overflow-x-auto">
+          <div className="h-64 min-w-[680px]">
+            {mounted ? (
+              <ResponsiveContainer height="100%" width="100%">
+                <BarChart data={data} margin={{ left: -12, right: 4, top: 8 }}>
+                  <CartesianGrid stroke="#e4e4e7" strokeDasharray="4 4" vertical={false} />
+                  <XAxis
+                    axisLine={false}
+                    dataKey="type"
+                    interval={0}
+                    tick={{ fill: "#71717a", fontSize: 11 }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tick={{ fill: "#71717a", fontSize: 12 }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      border: "1px solid #e4e4e7",
+                      borderRadius: 8,
+                      boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+                    }}
+                  />
+                  <Bar dataKey="count" fill="#18181b" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full rounded-md bg-zinc-50" />
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

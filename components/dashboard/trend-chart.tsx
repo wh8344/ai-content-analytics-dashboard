@@ -40,7 +40,7 @@ export function TrendChart({ data }: { data: TrendDataPoint[] }) {
                 />
                 <YAxis
                   axisLine={false}
-                  domain={[60, 100]}
+                  domain={[0, 100]}
                   tick={{ fill: "#71717a", fontSize: 12 }}
                   tickLine={false}
                 />
