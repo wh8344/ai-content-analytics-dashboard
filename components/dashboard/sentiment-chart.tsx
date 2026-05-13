@@ -13,7 +13,7 @@ export function SentimentChart({ data }: { data: SentimentSegment[] }) {
   }, []);
 
   return (
-    <Card className="min-h-[360px]">
+    <Card className="min-h-[360px] min-w-0 overflow-hidden">
       <CardHeader>
         <CardTitle>Sentiment Mix</CardTitle>
         <CardDescription>Distribution of analyzed content sentiment.</CardDescription>

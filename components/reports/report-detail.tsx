@@ -44,7 +44,7 @@ function BackLink({ className }: { className?: string }) {
   return (
     <Link
       className={cn(
-        "inline-flex h-9 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50",
+        "inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-900 shadow-sm transition-colors hover:bg-zinc-50",
         className,
       )}
       href="/reports"
@@ -93,13 +93,15 @@ export function ReportDetail({ id }: { id: string }) {
   return (
     <DashboardShell title="Report Detail">
       <div className="space-y-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <PageHeader
-            eyebrow="Report detail"
-            title={report.title}
-            description={`${report.contentType} analysis created on ${report.createdAt}.`}
-          />
-          <BackLink />
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+          <div className="min-w-0">
+            <PageHeader
+              eyebrow="Report detail"
+              title={report.title}
+              description={`${report.contentType} analysis created on ${report.createdAt}.`}
+            />
+          </div>
+          <BackLink className="w-fit lg:mt-1" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-4">
@@ -118,20 +120,20 @@ export function ReportDetail({ id }: { id: string }) {
           ))}
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
           <AnalysisResultCard
             onExportCsv={() => exportAnalysisAsCsv(exportableReport)}
             onExportJson={() => exportAnalysisAsJson(exportableReport)}
             result={result}
           />
-          <Card>
-            <CardHeader>
+          <Card className="min-w-0 overflow-hidden">
+            <CardHeader className="border-b border-zinc-100 pb-4">
               <CardTitle>Export Options</CardTitle>
               <CardDescription>Download this analysis for client review or archive use.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 pt-4">
               <Button
-                className="h-10 w-full justify-start gap-2 text-sm font-semibold"
+                className="h-11 w-full justify-start gap-2 rounded-lg text-sm font-semibold"
                 onClick={() => exportAnalysisAsJson(exportableReport)}
                 type="button"
                 variant="outline"
@@ -140,7 +142,7 @@ export function ReportDetail({ id }: { id: string }) {
                 Export JSON
               </Button>
               <Button
-                className="h-10 w-full justify-start gap-2 text-sm font-semibold"
+                className="h-11 w-full justify-start gap-2 rounded-lg text-sm font-semibold"
                 onClick={() => exportAnalysisAsCsv(exportableReport)}
                 type="button"
                 variant="outline"

@@ -35,7 +35,7 @@ function Badge({ className, children }: { className: string; children: React.Rea
 
 export function RecentReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
   return (
-    <Card>
+    <Card className="min-w-0 overflow-hidden">
       <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <CardTitle>Recent Analysis Reports</CardTitle>
@@ -44,7 +44,7 @@ export function RecentReportsTable({ reports }: { reports: RecentAnalysisReport[
         <span className="text-xs font-medium text-zinc-500">{reports.length} reports</span>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="max-w-full overflow-x-auto">
           <table className="w-full min-w-[860px] border-separate border-spacing-0 text-left text-sm">
             <thead>
               <tr className="border-b border-zinc-200 text-xs uppercase text-zinc-500">

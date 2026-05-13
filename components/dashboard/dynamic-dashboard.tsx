@@ -90,7 +90,7 @@ function DashboardSkeleton() {
           </Card>
         ))}
       </div>
-      <div className="grid gap-4 xl:grid-cols-[1.4fr_0.8fr]">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]">
         <Card className="min-h-[360px]">
           <CardContent className="p-6">
             <div className="h-5 w-40 rounded bg-zinc-100" />
@@ -223,12 +223,12 @@ export function DynamicDashboard() {
         ))}
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.4fr_0.8fr]">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]">
         <TrendChart data={analytics.trendData} />
         <SentimentChart data={analytics.sentimentData} />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <ContentTypeChart data={analytics.contentTypeData} />
         <RecentReportsTable reports={analytics.recentReports} />
       </div>

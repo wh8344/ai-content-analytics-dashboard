@@ -21,7 +21,7 @@ export function TrendChart({ data }: { data: TrendDataPoint[] }) {
   }, []);
 
   return (
-    <Card className="min-h-[360px]">
+    <Card className="min-h-[360px] min-w-0 overflow-hidden">
       <CardHeader>
         <CardTitle>AI Score Over Time</CardTitle>
         <CardDescription>Average content quality score across analyzed assets.</CardDescription>

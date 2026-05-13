@@ -21,7 +21,7 @@ export function ContentTypeChart({ data }: { data: ContentTypeVolume[] }) {
   }, []);
 
   return (
-    <Card className="min-h-[360px]">
+    <Card className="min-h-[360px] min-w-0 overflow-hidden">
       <CardHeader>
         <CardTitle>Content Type Volume</CardTitle>
         <CardDescription>Analyzed content grouped by source format.</CardDescription>

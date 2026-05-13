@@ -53,13 +53,13 @@ export function AnalysisResultCard({
   onExportJson?: () => void;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-4 border-b border-zinc-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+    <Card className="min-w-0 overflow-hidden">
+      <CardHeader className="grid gap-4 border-b border-zinc-100 pb-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="min-w-0">
           <CardTitle>AI Analysis Result</CardTitle>
           <CardDescription>Structured insight generated for the selected content.</CardDescription>
         </div>
-        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+        <div className="flex w-fit flex-wrap items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1">
           <Badge className={sentimentStyles[result.sentiment]}>{result.sentiment}</Badge>
           <Badge className={riskStyles[result.riskLevel]}>{result.riskLevel} Risk</Badge>
           {onExportJson ? (
