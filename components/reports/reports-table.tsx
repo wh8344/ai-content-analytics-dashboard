@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Search } from "lucide-react";
+import { Eye, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type {
@@ -10,9 +10,14 @@ import type {
   Sentiment,
 } from "@/src/types/analytics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { getSavedAnalysisReports } from "@/src/lib/analysis-history";
+import {
+  clearAnalysisHistory,
+  deleteAnalysisById,
+  getAnalysisHistory,
+} from "@/src/lib/analysis-history";
 
 type ContentTypeFilter = ContentType | "All";
 type SentimentFilter = Sentiment | "All";
@@ -80,7 +85,7 @@ function FilterSelect({
   );
 }
 
-export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
+export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[] }) {
   const [savedReports, setSavedReports] = useState<RecentAnalysisReport[]>([]);
   const [query, setQuery] = useState("");
   const [contentType, setContentType] = useState<ContentTypeFilter>("All");
@@ -89,7 +94,7 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
 
   useEffect(() => {
     function syncReports() {
-      setSavedReports(getSavedAnalysisReports());
+      setSavedReports(getAnalysisHistory());
     }
 
     syncReports();
@@ -121,6 +126,32 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
     });
   }, [allReports, contentType, query, riskLevel, sentiment]);
 
+  function handleDeleteReport(report: RecentAnalysisReport) {
+    const confirmed = window.confirm(`Delete "${report.title}" from analysis history?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteAnalysisById(report.id);
+  }
+
+  function handleClearAll() {
+    const confirmed = window.confirm(
+      "Clear all saved analysis history? This will remove reports from Dashboard, Reports, and Insights.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    clearAnalysisHistory();
+    setQuery("");
+    setContentType("All");
+    setSentiment("All");
+    setRiskLevel("All");
+  }
+
   return (
     <Card>
       <CardHeader className="space-y-4">
@@ -131,9 +162,17 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
               Search and filter completed AI content analysis records.
             </CardDescription>
           </div>
-          <span className="text-xs font-medium text-zinc-500">
-            {filteredReports.length} of {allReports.length} reports
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-zinc-500">
+              {filteredReports.length} of {allReports.length} reports
+            </span>
+            {allReports.length > 0 ? (
+              <Button onClick={handleClearAll} size="sm" type="button" variant="outline">
+                <Trash2 className="h-4 w-4" />
+                Clear All
+              </Button>
+            ) : null}
+          </div>
         </div>
 
         <div className="grid gap-3 lg:grid-cols-[minmax(240px,1fr)_180px_160px_140px]">
@@ -175,14 +214,26 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
       <CardContent>
         {filteredReports.length === 0 ? (
           <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 px-5 py-12 text-center">
-            <p className="text-sm font-semibold text-zinc-950">No reports match these filters</p>
-            <p className="mt-2 text-sm text-zinc-500">
-              Adjust the search query or filters to view historical analysis reports.
+            <p className="text-sm font-semibold text-zinc-950">
+              {allReports.length === 0 ? "No saved analysis reports yet" : "No reports match these filters"}
             </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              {allReports.length === 0
+                ? "Analyze content to build a report archive for dashboard and insight trends."
+                : "Adjust the search query or filters to view historical analysis reports."}
+            </p>
+            {allReports.length === 0 ? (
+              <Link
+                className="mt-4 inline-flex h-9 items-center justify-center rounded-md bg-zinc-950 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+                href="/analyze"
+              >
+                Analyze Content
+              </Link>
+            ) : null}
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[940px] border-separate border-spacing-0 text-left text-sm">
+            <table className="w-full min-w-[1020px] border-separate border-spacing-0 text-left text-sm">
               <thead>
                 <tr className="text-xs uppercase text-zinc-500">
                   <th className="border-b border-zinc-200 pb-3 font-medium">Title</th>
@@ -192,7 +243,7 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
                   <th className="border-b border-zinc-200 pb-3 font-medium">Risk Level</th>
                   <th className="border-b border-zinc-200 pb-3 font-medium">Created At</th>
                   <th className="border-b border-zinc-200 pb-3 font-medium">Status</th>
-                  <th className="border-b border-zinc-200 pb-3 text-right font-medium">Action</th>
+                  <th className="border-b border-zinc-200 pb-3 text-right font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -216,13 +267,23 @@ export function ReportsTable({ reports }: { reports: RecentAnalysisReport[] }) {
                     </td>
                     <td className="border-b border-zinc-100 py-4 pr-4">{report.status}</td>
                     <td className="border-b border-zinc-100 py-4 text-right">
-                      <Link
-                        className="inline-flex h-8 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50"
-                        href={`/reports/${report.id}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                        View
-                      </Link>
+                      <div className="inline-flex items-center gap-2">
+                        <Link
+                          className="inline-flex h-8 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50"
+                          href={`/reports/${report.id}`}
+                        >
+                          <Eye className="h-4 w-4" />
+                          View
+                        </Link>
+                        <button
+                          className="inline-flex h-8 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-3 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+                          onClick={() => handleDeleteReport(report)}
+                          type="button"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

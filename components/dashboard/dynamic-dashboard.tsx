@@ -16,7 +16,7 @@ import { RecentReportsTable } from "@/components/dashboard/recent-reports-table"
 import { SentimentChart } from "@/components/dashboard/sentiment-chart";
 import { TrendChart } from "@/components/dashboard/trend-chart";
 import { Card, CardContent } from "@/components/ui/card";
-import { getSavedAnalysisReports } from "@/src/lib/analysis-history";
+import { getAnalysisHistory } from "@/src/lib/analysis-history";
 import type {
   ContentType,
   ContentTypeVolume,
@@ -113,7 +113,7 @@ export function DynamicDashboard() {
 
   useEffect(() => {
     function refreshReports() {
-      setReports(getSavedAnalysisReports());
+      setReports(getAnalysisHistory());
     }
 
     refreshReports();

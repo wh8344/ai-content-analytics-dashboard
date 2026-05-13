@@ -27,7 +27,7 @@ import type {
 } from "@/src/types/analytics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { getSavedAnalysisReports } from "@/src/lib/analysis-history";
+import { getAnalysisHistory } from "@/src/lib/analysis-history";
 
 type InsightMetrics = {
   totalReports: number;
@@ -330,7 +330,7 @@ export function DynamicInsights() {
 
   useEffect(() => {
     function syncReports() {
-      setReports(getSavedAnalysisReports());
+      setReports(getAnalysisHistory());
     }
 
     syncReports();

@@ -1,7 +1,6 @@
 import { DashboardShell } from "@/components/dashboard-shell";
 import { PageHeader } from "@/components/page-header";
 import { ReportsTable } from "@/components/reports/reports-table";
-import { recentAnalysisReports } from "@/src/data/mock-data";
 
 export default function ReportsPage() {
   return (
@@ -13,7 +12,7 @@ export default function ReportsPage() {
           description="Search and filter previous analysis runs by content type, sentiment, risk level, score, and review status."
         />
 
-        <ReportsTable reports={recentAnalysisReports} />
+        <ReportsTable />
       </div>
     </DashboardShell>
   );

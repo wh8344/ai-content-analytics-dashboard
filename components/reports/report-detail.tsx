@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Download, FileJson } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Download, FileJson, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AnalysisResultCard } from "@/components/analyze/analysis-result-card";
 import { DashboardShell } from "@/components/dashboard-shell";
@@ -12,7 +13,8 @@ import { recentAnalysisReports } from "@/src/data/mock-data";
 import {
   exportAnalysisAsCsv,
   exportAnalysisAsJson,
-  getSavedAnalysisReport,
+  deleteAnalysisById,
+  getAnalysisById,
 } from "@/src/lib/analysis-history";
 import type { AnalysisResult, RecentAnalysisReport, SavedAnalysisReport } from "@/src/types/analytics";
 import { cn } from "@/lib/utils";
@@ -56,6 +58,7 @@ function BackLink({ className }: { className?: string }) {
 }
 
 export function ReportDetail({ id }: { id: string }) {
+  const router = useRouter();
   const [savedReport, setSavedReport] = useState<SavedAnalysisReport | null>(null);
   const staticReport = useMemo(
     () => recentAnalysisReports.find((report) => report.id === id) ?? null,
@@ -63,7 +66,7 @@ export function ReportDetail({ id }: { id: string }) {
   );
 
   useEffect(() => {
-    setSavedReport(getSavedAnalysisReport(id));
+    setSavedReport(getAnalysisById(id));
   }, [id]);
 
   const report = savedReport ?? staticReport;
@@ -88,6 +91,17 @@ export function ReportDetail({ id }: { id: string }) {
         </div>
       </DashboardShell>
     );
+  }
+
+  function handleDeleteCurrentReport() {
+    const confirmed = window.confirm(`Delete "${report?.title}" from analysis history?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteAnalysisById(id);
+    router.push("/reports");
   }
 
   return (
@@ -150,6 +164,17 @@ export function ReportDetail({ id }: { id: string }) {
                 <Download className="h-4 w-4" />
                 Export CSV
               </Button>
+              {savedReport ? (
+                <Button
+                  className="h-11 w-full justify-start gap-2 rounded-lg border-red-200 text-sm font-semibold text-red-700 hover:bg-red-50"
+                  onClick={handleDeleteCurrentReport}
+                  type="button"
+                  variant="outline"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete Report
+                </Button>
+              ) : null}
               <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">Source Content</p>
                 <p className="mt-2 text-sm leading-6 text-zinc-600">

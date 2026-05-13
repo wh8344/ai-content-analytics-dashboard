@@ -22,7 +22,16 @@ function isSavedReport(value: unknown): value is SavedAnalysisReport {
   );
 }
 
-export function getSavedAnalysisReports(): SavedAnalysisReport[] {
+function emitHistoryUpdate() {
+  window.dispatchEvent(new Event("analysis-history-updated"));
+}
+
+function writeAnalysisHistory(reports: SavedAnalysisReport[]) {
+  window.localStorage.setItem(analysisHistoryKey, JSON.stringify(reports));
+  emitHistoryUpdate();
+}
+
+export function getAnalysisHistory(): SavedAnalysisReport[] {
   if (typeof window === "undefined") {
     return [];
   }
@@ -37,7 +46,7 @@ export function getSavedAnalysisReports(): SavedAnalysisReport[] {
   }
 }
 
-export function saveAnalysisReport(
+export function saveAnalysisResult(
   form: AnalysisFormState,
   result: AnalysisResult,
 ): SavedAnalysisReport {
@@ -63,16 +72,40 @@ export function saveAnalysisReport(
     result,
   };
 
-  const reports = [report, ...getSavedAnalysisReports()].slice(0, 25);
-  window.localStorage.setItem(analysisHistoryKey, JSON.stringify(reports));
-  window.dispatchEvent(new Event("analysis-history-updated"));
+  const reports = [report, ...getAnalysisHistory()].slice(0, 25);
+  writeAnalysisHistory(reports);
 
   return report;
 }
 
-export function getSavedAnalysisReport(id: string) {
-  return getSavedAnalysisReports().find((report) => report.id === id) ?? null;
+export function getAnalysisById(id: string) {
+  return getAnalysisHistory().find((report) => report.id === id) ?? null;
 }
+
+export function deleteAnalysisById(id: string) {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const reports = getAnalysisHistory();
+  const nextReports = reports.filter((report) => report.id !== id);
+  const didDelete = nextReports.length !== reports.length;
+  writeAnalysisHistory(nextReports);
+
+  return didDelete;
+}
+
+export function clearAnalysisHistory() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  writeAnalysisHistory([]);
+}
+
+export const getSavedAnalysisReports = getAnalysisHistory;
+export const saveAnalysisReport = saveAnalysisResult;
+export const getSavedAnalysisReport = getAnalysisById;
 
 export function exportAnalysisAsJson(report: SavedAnalysisReport) {
   const blob = new Blob([JSON.stringify(report, null, 2)], {

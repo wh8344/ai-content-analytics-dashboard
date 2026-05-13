@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   exportAnalysisAsCsv,
   exportAnalysisAsJson,
-  saveAnalysisReport,
+  saveAnalysisResult,
 } from "@/src/lib/analysis-history";
 
 const initialForm: AnalysisFormState = {
@@ -22,11 +22,26 @@ const initialForm: AnalysisFormState = {
   contentType: "Article",
 };
 
-const sampleForm: AnalysisFormState = {
-  contentType: "Product Review",
-  content:
-    "This product review says the onboarding experience is clear, the reporting dashboard is fast, and the weekly analytics summary helps our marketing team prioritize better content decisions.",
-};
+const sampleForms: Array<AnalysisFormState & { label: string }> = [
+  {
+    label: "Marketing Copy Sample",
+    contentType: "Marketing Copy",
+    content:
+      "Launch smarter campaigns with an AI analytics workspace that scores every draft, surfaces sentiment signals, and helps marketing teams improve messaging before content goes live.",
+  },
+  {
+    label: "Product Review Sample",
+    contentType: "Product Review",
+    content:
+      "This product review says the onboarding experience is clear, the reporting dashboard is fast, and the weekly analytics summary helps our marketing team prioritize better content decisions.",
+  },
+  {
+    label: "Social Media Post Sample",
+    contentType: "Social Post",
+    content:
+      "We just shipped a faster content intelligence workflow for teams that need clear sentiment, risk, keyword, and quality signals before publishing across social channels.",
+  },
+];
 
 function AnalysisSignalsPanel({ isLoading }: { isLoading: boolean }) {
   const signals = [
@@ -155,7 +170,7 @@ export function AnalyzeWorkflow() {
       }
 
       setResult(data.result);
-      setSavedReport(saveAnalysisReport(form, data.result));
+      setSavedReport(saveAnalysisResult(form, data.result));
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -167,8 +182,8 @@ export function AnalyzeWorkflow() {
     }
   }
 
-  function handleTrySample() {
-    setForm(sampleForm);
+  function handleTrySample(sample: AnalysisFormState) {
+    setForm(sample);
     setError("");
     setRequestError("");
   }
@@ -182,6 +197,7 @@ export function AnalyzeWorkflow() {
         onChange={setForm}
         onSubmit={handleSubmit}
         onTrySample={handleTrySample}
+        samples={sampleForms}
       />
       <div className="space-y-4">
         {requestError ? (

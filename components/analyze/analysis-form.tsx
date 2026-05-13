@@ -20,13 +20,15 @@ export function AnalysisForm({
   onChange,
   onSubmit,
   onTrySample,
+  samples,
 }: {
   form: AnalysisFormState;
   error: string;
   isLoading: boolean;
   onChange: (form: AnalysisFormState) => void;
   onSubmit: () => void;
-  onTrySample: () => void;
+  onTrySample: (sample: AnalysisFormState) => void;
+  samples: Array<AnalysisFormState & { label: string }>;
 }) {
   return (
     <Card>
@@ -88,15 +90,26 @@ export function AnalysisForm({
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
               {isLoading ? "Analyzing..." : "Analyze Content"}
             </Button>
-            <Button
-              className="w-full sm:w-auto"
-              disabled={isLoading}
-              onClick={onTrySample}
-              type="button"
-              variant="outline"
-            >
-              Try Sample Content
-            </Button>
+          </div>
+
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+              Try sample content
+            </p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {samples.map((sample) => (
+                <Button
+                  className="h-auto min-h-10 whitespace-normal px-3 py-2 text-left text-xs leading-5"
+                  disabled={isLoading}
+                  key={sample.label}
+                  onClick={() => onTrySample(sample)}
+                  type="button"
+                  variant="outline"
+                >
+                  {sample.label}
+                </Button>
+              ))}
+            </div>
           </div>
         </form>
       </CardContent>
