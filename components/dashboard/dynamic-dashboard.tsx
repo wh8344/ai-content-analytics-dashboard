@@ -72,9 +72,7 @@ export function DynamicDashboard({
 }: {
   initialReports?: SavedAnalysisReport[];
 }) {
-  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(
-    initialReports.length > 0 ? initialReports : null,
-  );
+  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(initialReports);
 
   useEffect(() => {
     function refreshReports() {
