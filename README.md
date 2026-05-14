@@ -12,15 +12,15 @@ GitHub: [https://github.com/wh8344/ai-content-analytics-dashboard](https://githu
 
 ## Screenshots
 
-![Homepage](screenshots/homepage.png)
+![Homepage](screenshots/01-homepage.png)
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/02-dashboard.png)
 
-![Analyze](screenshots/analyze.png)
+![Analyze](screenshots/03-analyze.png)
 
-![Insights](screenshots/insights.png)
+![Insights](screenshots/04-insights.png)
 
-![Reports](screenshots/reports.png)
+![Reports](screenshots/05-reports.png)
 
 ## Key Features
 
