@@ -311,14 +311,21 @@ function InsightsEmptyState() {
   );
 }
 
-export function DynamicInsights() {
-  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(null);
+export function DynamicInsights({
+  initialReports = [],
+}: {
+  initialReports?: SavedAnalysisReport[];
+}) {
+  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(
+    initialReports.length > 0 ? initialReports : null,
+  );
   const metrics = useMemo(() => calculateMetrics(reports ?? []), [reports]);
   const recommendations = useMemo(() => buildRecommendations(metrics), [metrics]);
 
   useEffect(() => {
     function syncReports() {
-      setReports(getAnalysisHistory());
+      const history = getAnalysisHistory();
+      setReports(history.length > 0 ? history : initialReports);
     }
 
     syncReports();
@@ -329,7 +336,7 @@ export function DynamicInsights() {
       window.removeEventListener("storage", syncReports);
       window.removeEventListener("analysis-history-updated", syncReports);
     };
-  }, []);
+  }, [initialReports]);
 
   if (reports === null) {
     return <PageSkeleton charts={3} />;

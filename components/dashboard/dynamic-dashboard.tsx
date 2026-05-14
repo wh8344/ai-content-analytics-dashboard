@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertTriangle,
   BarChart3,
   FileText,
   Gauge,
@@ -66,12 +67,19 @@ function DashboardSkeleton() {
   return <PageSkeleton />;
 }
 
-export function DynamicDashboard() {
-  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(null);
+export function DynamicDashboard({
+  initialReports = [],
+}: {
+  initialReports?: SavedAnalysisReport[];
+}) {
+  const [reports, setReports] = useState<SavedAnalysisReport[] | null>(
+    initialReports.length > 0 ? initialReports : null,
+  );
 
   useEffect(() => {
     function refreshReports() {
-      setReports(getAnalysisHistory());
+      const history = getAnalysisHistory();
+      setReports(history.length > 0 ? history : initialReports);
     }
 
     refreshReports();
@@ -82,7 +90,7 @@ export function DynamicDashboard() {
       window.removeEventListener("analysis-history-updated", refreshReports);
       window.removeEventListener("storage", refreshReports);
     };
-  }, []);
+  }, [initialReports]);
 
   const analytics = useMemo(() => {
     const reportList = reports ?? [];
@@ -128,7 +136,7 @@ export function DynamicDashboard() {
         value: String(highRiskCount),
         change: highRiskCount > 0 ? "Review required" : "No high-risk reports",
         trend: highRiskCount > 0 ? "down" : "up",
-        icon: FileText,
+        icon: AlertTriangle,
       },
     ];
 

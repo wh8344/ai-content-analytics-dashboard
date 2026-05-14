@@ -87,7 +87,9 @@ function FilterSelect({
 }
 
 export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[] }) {
-  const [savedReports, setSavedReports] = useState<RecentAnalysisReport[] | null>(null);
+  const [savedReports, setSavedReports] = useState<RecentAnalysisReport[] | null>(
+    reports.length > 0 ? reports : null,
+  );
   const [query, setQuery] = useState("");
   const [contentType, setContentType] = useState<ContentTypeFilter>("All");
   const [sentiment, setSentiment] = useState<SentimentFilter>("All");
@@ -108,7 +110,13 @@ export function ReportsTable({ reports = [] }: { reports?: RecentAnalysisReport[
     };
   }, []);
 
-  const allReports = useMemo(() => [...(savedReports ?? []), ...reports], [reports, savedReports]);
+  const allReports = useMemo(() => {
+    if (savedReports && savedReports.length > 0) {
+      return savedReports;
+    }
+
+    return reports;
+  }, [reports, savedReports]);
 
   const filteredReports = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();

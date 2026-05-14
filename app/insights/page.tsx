@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { DynamicInsights } from "@/components/insights/dynamic-insights";
 import { PageHeader } from "@/components/page-header";
+import { portfolioAnalysisHistory } from "@/src/data/portfolio-history";
 
 export const metadata: Metadata = {
   title: "Insights",
@@ -9,7 +10,14 @@ export const metadata: Metadata = {
     "Review dynamic content strategy recommendations, sentiment trends, and quality opportunities from saved analysis history.",
 };
 
-export default function InsightsPage() {
+export default async function InsightsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ demo?: string }>;
+}) {
+  const params = await searchParams;
+  const initialReports = params?.demo === "portfolio" ? portfolioAnalysisHistory : [];
+
   return (
     <DashboardShell title="Insights">
       <div className="space-y-5">
@@ -19,7 +27,7 @@ export default function InsightsPage() {
           description="Review performance, sentiment, risk, keywords, and rule-based recommendations generated from your saved analysis history."
         />
 
-        <DynamicInsights />
+        <DynamicInsights initialReports={initialReports} />
       </div>
     </DashboardShell>
   );
